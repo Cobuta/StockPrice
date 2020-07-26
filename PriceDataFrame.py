@@ -18,6 +18,7 @@ def load_price_df(base_path):
         for k in header.keys():
             df1[k] = header[k]
         stockprice_df = pd.concat([stockprice_df, df1])
+        print('loaded ' + str(len(stockprice_df)) + ' records\r')
     stockprice_df['date'] = pd.to_datetime(stockprice_df['date'])
     return stockprice_df
 
