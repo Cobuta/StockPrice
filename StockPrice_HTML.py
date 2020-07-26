@@ -58,6 +58,7 @@ for code in stock_df['code']:
             df['code'] = code
             df['issue'] = stock_df[(stock_df['code'] == code)]['issue'].values[0]
             df['market'] = stock_df[(stock_df['code'] == code)]['market'].values[0]
+            df['date'] = pd.to_datetime(df['date'])
             print(df)
             df.to_csv(path.Path.joinpath(path.Path(filePath), '../tablefiles/', str(code) + '_' + str(year) + '.csv'))
             stockprice_df = stockprice_df.append(df)
