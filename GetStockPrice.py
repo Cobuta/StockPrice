@@ -10,12 +10,14 @@ from requests_html import HTMLSession
 
 import PriceDataFrame
 
+def wait_time (min_wait=3, max_wait=5):
+    min_wait = max(min_wait, 3)
+    max_wait = max(max_wait, 5)
+    return max(random.normalvariate((min_wait + max_wait) / 2, abs(min_wait - max_wait)) / 4, min_wait)
 
 def waited_get(session, url, min_wait=3, max_wait=5):
     print(url)
-    min_wait = max(min_wait, 3)
-    max_wait = max(max_wait, 5)
-    time.sleep(max(random.normalvariate((min_wait + max_wait) / 2, abs(min_wait - max_wait)) / 4, min_wait))
+    time.sleep(wait_time(min_wait,max_wait))
     res = session.get(url)
     res.raise_for_status()
     return res
@@ -23,9 +25,7 @@ def waited_get(session, url, min_wait=3, max_wait=5):
 
 def waited_post(session, url, data, min_wait=3, max_wait=5):
     print(url)
-    min_wait = max(min_wait, 3)
-    max_wait = max(max_wait, 5)
-    time.sleep(max(random.normalvariate((min_wait + max_wait) / 2, abs(min_wait - max_wait)) / 4, min_wait))
+    time.sleep(wait_time(min_wait,max_wait))
     res = session.post(url, data)
     res.raise_for_status()
     return res
