@@ -14,11 +14,9 @@ import Declaration
 from HTML_API import waited_get
 import pathlib as path
 
-filePath = './datafiles/'
 
-
-stockprice_df = PriceDataFrame.load_price_df(filePath)
-# retrieved_df = PriceDataFrame.retrieved_df(stockprice_df)
+#stockprice_df = PriceDataFrame.load_price_df(filePath)
+retrieved_df = PriceDataFrame.retrieved_df(Declaration.filePath)
 
 # Start session
 
@@ -59,7 +57,7 @@ for code in stock_df['code']:
             df['market'] = stock_df[(stock_df['code'] == code)]['market'].values[0]
             df['date'] = pd.to_datetime(df['date'])
             print(df)
-            df.to_csv(path.Path.joinpath(path.Path(filePath), '../tablefiles/', str(code) + '_' + str(year) + '.csv'))
+            df.to_csv(path.Path.joinpath(path.Path(Declaration.filePath), '../tablefiles/', str(code) + '_' + str(year) + '.csv'))
             stockprice_df = stockprice_df.append(df)
 
 # In[39]:

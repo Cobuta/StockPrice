@@ -8,7 +8,6 @@ from pandas import DataFrame
 
 def load_price_df(base_path):
     stockprice_df = DataFrame()
-
     for f in path.Path(base_path).resolve(strict=True).glob('*.csv'):
         with f.open(encoding='shift_jis') as fobj:
             header_values = re.split('[ ,]', re.sub("[,\n]+$", "", fobj.readline()), 2)
@@ -22,12 +21,20 @@ def load_price_df(base_path):
     return stockprice_df
 
 
-def retrieved_df(df):
-    return pd.concat([df['date'].dt.year, df['code']], axis=1).drop_duplicates().rename(columns={'date': 'year'})
+def retrieved_df(base_path):
+    base_folder=path.Path(base_path).expanduser().resolve()
+    df=pd.DataFrame(columns=['code','year'])
+    for f in base_folder.resolve(strict=True).glob('*.csv'):
+        fname_elements=re.split('[_\.]',f.name)
+        df=df.append(pd.Series([fname_elements[0],fname_elements[1]],index=['code','year']),ignore_index=True)
+        print(f.name+' processed.')
+    df.drop_duplicates(inplace=True)
+    df.to_json(path.Path.joinpath(base_folder,'.retrieved.csv'))
+    return df
 
 
 def is_exist(df, code: str, year: int):
     df = pd.concat([df['date'].dt.year, df['code']], axis=1).drop_duplicates().rename(columns={'date': 'year'})
-    df = ((df['year'] == int(year)) & (df['code'] == str(code)))
+    df = ((df['year'] == str(year)) & (df['code'] == str(code)))
     # print(df)
     return df.sum() > 0
