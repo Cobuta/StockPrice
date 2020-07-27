@@ -9,6 +9,7 @@ import time
 from requests_html import HTMLSession
 
 import PriceDataFrame
+from Declaration import filePath, url
 from HTML_API import waited_get, waited_post
 
 
@@ -40,8 +41,7 @@ def download_csv(stock_link, base_path, stockprice_df):
             print("skipped")
 
 
-url = 'https://kabuoji3.com/stock/'
-filePath = './datafiles/'
+
 
 stockprice_df = PriceDataFrame.load_price_df(filePath)
 retrieved_df = PriceDataFrame.retrieved_df(stockprice_df)
