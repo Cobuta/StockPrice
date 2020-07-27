@@ -13,10 +13,10 @@ import PriceDataFrame
 import Declaration
 from HTML_API import waited_get
 import pathlib as path
-
+from Declaration import filePath
 
 #stockprice_df = PriceDataFrame.load_price_df(filePath)
-retrieved_df = PriceDataFrame.retrieved_df(Declaration.filePath)
+retrieved_df = PriceDataFrame.retrieved_df(filePath)
 
 # Start session
 
@@ -46,7 +46,7 @@ for code in stock_df['code']:
         year=0
         for input_param in res.html.find("form", first=True).find('input'):
             if input_param.attrs['name'] == 'year': year = input_param.attrs['value']
-        if PriceDataFrame.is_exist(retrieved_df, code, year):
+        if     ((retrieved_df['year'] == str(year)) & (retrieved_df['code'] == str(code))).sum():
             print('skipped')
             continue
         else:
@@ -57,7 +57,7 @@ for code in stock_df['code']:
             df['market'] = stock_df[(stock_df['code'] == code)]['market'].values[0]
             df['date'] = pd.to_datetime(df['date'])
             print(df)
-            df.to_csv(path.Path.joinpath(path.Path(Declaration.filePath), '../tablefiles/', str(code) + '_' + str(year) + '.csv'))
+            df.to_csv(path.Path(filePath).expanduser().resolve().joinpath( str(code) + '_' + str(year) + '.csv'))
             #stockprice_df = stockprice_df.append(df)
 
 # In[39]:

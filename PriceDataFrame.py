@@ -8,7 +8,8 @@ from pandas import DataFrame
 
 def load_price_df(base_path):
     stockprice_df = DataFrame()
-    for f in path.Path(base_path).resolve(strict=True).glob('*.csv'):
+    base_folder=path.Path(base_path).expanduser().resolve()
+    for f in base_folder.resolve(strict=True).glob('*.csv'):
         with f.open(encoding='shift_jis') as fobj:
             header_values = re.split('[ ,]', re.sub("[,\n]+$", "", fobj.readline()), 2)
             header = dict(zip(Declaration.header_keys, header_values))
