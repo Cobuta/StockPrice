@@ -42,14 +42,11 @@ for code in stock_df['code']:
     year_links = [link for link in res.html.absolute_links if re.search("/stock/[01-9]+/[01-9]+", link)]
     for year_link in year_links:
         print(year_link)
-        res = waited_get(session, year_link)
-        year=0
-        for input_param in res.html.find("form", first=True).find('input'):
-            if input_param.attrs['name'] == 'year': year = input_param.attrs['value']
-        if     ((retrieved_df['year'] == str(year)) & (retrieved_df['code'] == str(code))).sum():
+        if ((retrieved_df['year'] == year_link.split('/')[-2]) & (retrieved_df['code'] == year_link.split('/')[-3])).sum()>0:
             print('skipped')
             continue
         else:
+            res = waited_get(session, year_link)
             df = pd.read_html(res.text)[0]
             df.columns = Declaration.field_names
             df['code'] = code
