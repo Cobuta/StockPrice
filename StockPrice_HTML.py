@@ -46,7 +46,7 @@ for code in stock_df['code']:
         year=0
         for input_param in res.html.find("form", first=True).find('input'):
             if input_param.attrs['name'] == 'year': year = input_param.attrs['value']
-        if PriceDataFrame.is_exist(stockprice_df, code, year):
+        if PriceDataFrame.is_exist(retrieved_df, code, year):
             print('skipped')
             continue
         else:
@@ -58,7 +58,7 @@ for code in stock_df['code']:
             df['date'] = pd.to_datetime(df['date'])
             print(df)
             df.to_csv(path.Path.joinpath(path.Path(Declaration.filePath), '../tablefiles/', str(code) + '_' + str(year) + '.csv'))
-            stockprice_df = stockprice_df.append(df)
+            #stockprice_df = stockprice_df.append(df)
 
 # In[39]:
 

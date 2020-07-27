@@ -29,7 +29,7 @@ def retrieved_df(base_path):
         df=df.append(pd.Series([fname_elements[0],fname_elements[1]],index=['code','year']),ignore_index=True)
         print(f.name+' processed.')
     df.drop_duplicates(inplace=True)
-    df.to_json(path.Path.joinpath(base_folder,'.retrieved.csv'))
+    df.to_csv(path.Path.joinpath(base_folder,'.retrieved.csv'))
     return df
 
 
