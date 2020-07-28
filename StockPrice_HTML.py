@@ -4,7 +4,7 @@
 
 import pathlib as path
 import re
-from logging import getLogger, basicConfig, DEBUG, Formatter
+from logging import getLogger, basicConfig, DEBUG
 from urllib.parse import urljoin
 
 import pandas as pd
@@ -15,10 +15,9 @@ from Declaration import filePath
 from HTML_API import waited_get
 
 LogFormat = '{asctime} [{levelname}] {module} {message}'
-#Formatter(LogFormat, style='{')
-basicConfig(filename='stockprice_retrieval.log', filemode='w', format=LogFormat,style='{',level=DEBUG)
+# Formatter(LogFormat, style='{')
+basicConfig(format=LogFormat, style='{', level=DEBUG)
 logger = getLogger(__name__)
-
 
 logger.info('StockPrice retrieval started')
 
@@ -34,7 +33,7 @@ res = waited_get(session, Declaration.url, logger=logger)
 # In[36]:
 
 # print(stock_df)
-for page_link in sorted([link for link in res.html.absolute_links if re.search('page=', link)]):
+for page_link in ([link for link in res.html.absolute_links if re.search('page=', link)]):
     logger.debug('started ' + page_link)
     stock_df = pd.DataFrame(columns=Declaration.stock_list_header)
     res = waited_get(session, page_link, logger=logger)
@@ -73,8 +72,8 @@ for page_link in sorted([link for link in res.html.absolute_links if re.search('
                 df['date'] = pd.to_datetime(df['date'])
                 fileName = path.Path(filePath).expanduser().resolve().joinpath(str(code) + '_' + str(year) + '.csv')
                 df.to_csv(fileName)
-                print('added ' + fileName)
-                logger.info('added ' + fileName)
+                print('added ' + fileName.name)
+                logger.info('added ' + fileName.name)
                 logger.debug('processed ' + year_link)
             # stockprice_df = stockprice_df.append(df)
 

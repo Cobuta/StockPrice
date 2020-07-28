@@ -2,6 +2,7 @@ import random
 import time
 from requests_html import HTMLSession
 from requests import RequestException
+from requests import Response
 
 
 def wait_time(min_wait=1, max_wait=5, *, logger):
@@ -14,10 +15,11 @@ def wait_time(min_wait=1, max_wait=5, *, logger):
 
 def waited_get(session: HTMLSession, url, min_wait=1, max_wait=1, *, logger):
     #    print(url)
+    res = Response()
     logger.debug('get_requested ' + url)
     time.sleep(wait_time(min_wait, max_wait, logger=logger))
     try:
-        res = session.get(url )
+        res = session.get(url)
         res.raise_for_status()
         logger.debug('get_processed ' + url)
     except RequestException as e:
@@ -28,6 +30,7 @@ def waited_get(session: HTMLSession, url, min_wait=1, max_wait=1, *, logger):
 
 def waited_post(session: HTMLSession, url, data, min_wait=1, max_wait=1, *, logger):
     #    print(url)
+    res = Response()
     logger.debug('post_requested ' + url)
     time.sleep(wait_time(min_wait, max_wait, logger=logger))
     try:
