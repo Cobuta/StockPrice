@@ -22,7 +22,7 @@ retrieved_df = PriceDataFrame.retrieved_df(filePath)
 # Start session
 
 session = HTMLSession()
-#res = waited_get(session, Declaration.url)
+res = waited_get(session, Declaration.url)
 
 # stock list
 stock_df = pd.DataFrame(columns=Declaration.stock_list_header)
