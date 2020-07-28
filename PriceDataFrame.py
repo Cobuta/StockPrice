@@ -8,7 +8,7 @@ from pandas import DataFrame
 
 def load_price_df(base_path):
     stockprice_df = DataFrame()
-    base_folder=path.Path(base_path).expanduser().resolve()
+    base_folder = path.Path(base_path).expanduser().resolve()
     for f in base_folder.resolve(strict=True).glob('*.csv'):
         with f.open(encoding='shift_jis') as fobj:
             header_values = re.split('[ ,]', re.sub("[,\n]+$", "", fobj.readline()), 2)
@@ -23,14 +23,14 @@ def load_price_df(base_path):
 
 
 def retrieved_df(base_path):
-    base_folder=path.Path(base_path).expanduser().resolve()
-    df=pd.DataFrame(columns=['code','year'])
+    base_folder = path.Path(base_path).expanduser().resolve()
+    df = pd.DataFrame(columns=['code', 'year'])
     for f in base_folder.resolve(strict=True).glob('*.csv'):
-        fname_elements=re.split('[_\.]',f.name)
-        df=df.append(pd.Series([fname_elements[0],fname_elements[1]],index=['code','year']),ignore_index=True)
-        print(f.name+' processed.')
+        fname_elements = re.split('[_\.]', f.name)
+        df = df.append(pd.Series([fname_elements[0], fname_elements[1]], index=['code', 'year']), ignore_index=True)
+        print(f.name + ' processed.')
     df.drop_duplicates(inplace=True)
-    df.to_csv(path.Path.joinpath(base_folder,'.retrieved.csv'))
+    df.to_csv(path.Path.joinpath(base_folder, '.retrieved.csv'))
     return df
 
 

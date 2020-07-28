@@ -4,24 +4,25 @@
 # In[33]:
 
 
-from bs4 import BeautifulSoup
-from requests_html import HTMLSession
-import re
-import pandas as pd
-from urllib.parse import urljoin
-import PriceDataFrame
-import Declaration
-from HTML_API import waited_get
 import pathlib as path
-from Declaration import filePath
+import re
+from urllib.parse import urljoin
 
-#stockprice_df = PriceDataFrame.load_price_df(filePath)
+import pandas as pd
+from requests_html import HTMLSession
+
+import Declaration
+import PriceDataFrame
+from Declaration import filePath
+from HTML_API import waited_get
+
+# stockprice_df = PriceDataFrame.load_price_df(filePath)
 retrieved_df = PriceDataFrame.retrieved_df(filePath)
 
 # Start session
 
 session = HTMLSession()
-res = waited_get(session, Declaration.url)
+#res = waited_get(session, Declaration.url)
 
 # stock list
 stock_df = pd.DataFrame(columns=Declaration.stock_list_header)
@@ -42,11 +43,14 @@ for code in stock_df['code']:
     year_links = [link for link in res.html.absolute_links if re.search("/stock/[01-9]+/[01-9]+", link)]
     for year_link in year_links:
         print(year_link)
-        if ((retrieved_df['year'] == year_link.split('/')[-2]) & (retrieved_df['code'] == year_link.split('/')[-3])).sum()>0:
+        year = year_link.split('/')[-2]
+        code = year_link.split('/')[-3]
+        if ((retrieved_df['year'] == year) & (retrieved_df['code'] == code)).sum() > 0:
             print('skipped')
             continue
         else:
             res = waited_get(session, year_link)
+            if res==None: continue
             df = pd.read_html(res.text)[0]
             df.columns = Declaration.field_names
             df['code'] = code
@@ -54,8 +58,8 @@ for code in stock_df['code']:
             df['market'] = stock_df[(stock_df['code'] == code)]['market'].values[0]
             df['date'] = pd.to_datetime(df['date'])
             print(df)
-            df.to_csv(path.Path(filePath).expanduser().resolve().joinpath( str(code) + '_' + str(year) + '.csv'))
-            #stockprice_df = stockprice_df.append(df)
+            df.to_csv(path.Path(filePath).expanduser().resolve().joinpath(str(code) + '_' + str(year) + '.csv'))
+            # stockprice_df = stockprice_df.append(df)
 
 # In[39]:
 
@@ -65,4 +69,3 @@ print(stock_df)
 # In[23]:
 
 
-res.text

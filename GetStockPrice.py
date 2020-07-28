@@ -2,9 +2,7 @@
 # coding: utf-8
 
 import pathlib as path
-import random
 import re
-import time
 
 from requests_html import HTMLSession
 
@@ -39,8 +37,6 @@ def download_csv(stock_link, base_path, stockprice_df):
             print(path.Path(filename).resolve())
         else:
             print("skipped")
-
-
 
 
 stockprice_df = PriceDataFrame.load_price_df(filePath)
