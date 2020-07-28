@@ -29,18 +29,18 @@ stock_df = pd.DataFrame(columns=Declaration.stock_list_header)
 # In[36]:
 
 # print(stock_df)
-for page_link in [link for link in res.html.absolute_links if re.search('page=', link)]:
+for page_link in sorted([link for link in res.html.absolute_links if re.search('page=', link)]):
     res = waited_get(session, page_link)
     df = pd.read_html(res.text)[0][['コード・名称', '市場']]
     df = pd.concat([df['コード・名称'].str.split(' ', 1, expand=True), df['市場']], axis=1)
     df.columns = Declaration.stock_list_header
     stock_df = stock_df.append(df)
-    print(str(len(stock_df)) + ' issue names are captured.\r')
+    print(str(len(stock_df)) + ' issue names are captured.\r',end='')
 
 for code in stock_df['code']:
     print(urljoin(Declaration.url, str(code)))
     res = waited_get(session, urljoin(Declaration.url, str(code) + '/'))
-    year_links = [link for link in res.html.absolute_links if re.search("/stock/[01-9]+/[01-9]+", link)]
+    year_links = sorted([link for link in res.html.absolute_links if re.search("/stock/[01-9]+/[01-9]+", link)])
     for year_link in year_links:
         print(year_link)
         year = year_link.split('/')[-2]
@@ -57,7 +57,6 @@ for code in stock_df['code']:
             df['issue'] = stock_df[(stock_df['code'] == code)]['issue'].values[0]
             df['market'] = stock_df[(stock_df['code'] == code)]['market'].values[0]
             df['date'] = pd.to_datetime(df['date'])
-            print(df)
             df.to_csv(path.Path(filePath).expanduser().resolve().joinpath(str(code) + '_' + str(year) + '.csv'))
             # stockprice_df = stockprice_df.append(df)
 
