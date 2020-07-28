@@ -15,9 +15,10 @@ from Declaration import filePath
 from HTML_API import waited_get
 
 LogFormat = '{asctime} [{levelname}] {module} {message}'
-basicConfig(filename='stockprice_retrieval.log', filemode='w', level=DEBUG)
+#Formatter(LogFormat, style='{')
+basicConfig(filename='stockprice_retrieval.log', filemode='w', format=LogFormat,style='{',level=DEBUG)
 logger = getLogger(__name__)
-Formatter(LogFormat, style='{')
+
 
 logger.info('StockPrice retrieval started')
 
