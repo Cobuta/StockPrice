@@ -1,14 +1,16 @@
 import random
 import time
+from http.client import RemoteDisconnected
+
 from requests_html import HTMLSession
 from requests import RequestException
 from requests import Response
 
 
-def wait_time(min_wait=1, max_wait=5, *, logger):
-    min_wait = max(min_wait, 1)
+def wait_time(min_wait=3, max_wait=5, *, logger):
+    min_wait = max(min_wait, 3)
     max_wait = max(max_wait, 5)
-    wait = max(random.normalvariate((min_wait + max_wait) / 2, abs(min_wait - max_wait)), 1)
+    wait = max(random.normalvariate((min_wait + max_wait) / 2, abs((min_wait - max_wait)/4)), min_wait)
     logger.debug('wait time ' + str(wait))
     return wait
 
@@ -22,6 +24,10 @@ def waited_get(session: HTMLSession, url, min_wait=1, max_wait=1, *, logger):
         res = session.get(url)
         res.raise_for_status()
         logger.debug('get_processed ' + url)
+    except RemoteDisconnected as e:
+        logger.critical(url + " error " + str(e))
+        time.sleep(60*30)
+        pass
     except RequestException as e:
         logger.critical(url + " error " + str(e))
     finally:
