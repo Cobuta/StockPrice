@@ -15,7 +15,7 @@ from Declaration import filePath
 from HTML_API import waited_get
 
 LogFormat = '{asctime} [{levelname}] {module} {message}'
-basicConfig(filename='stockprice.log',format=LogFormat, style='{', level=INFO)
+basicConfig(filename='stockprice_bak.log', format=LogFormat, style='{', level=INFO)
 logger = getLogger(__name__)
 
 logger.info('StockPrice retrieval started')
