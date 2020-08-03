@@ -45,6 +45,7 @@ def get_stock_links(url, folder):  # process root url
             df = pd.read_html(res.text)[0][['コード・名称', '市場']]
         except (ValueError,AttributeError) as e:
             logger.warning(page_link + str(e))
+            print('[WARNING] '+page_link + str(e))
         else:
             df = pd.concat([df['コード・名称'].str.split(' ', 1, expand=True), df['市場']], axis=1)
             df.columns = Declaration.stock_list_header
@@ -61,6 +62,7 @@ def get_year_links(stock_link, folder):
         year_links = sorted([link for link in res.html.absolute_links if re.search("/stock/[01-9]+/[01-9]+", link)])
     except (ValueError,AttributeError) as e:
         logger.warning(stock_link + str(e))
+        print('[WARNING] ' + stock_link + str(e))
     else:
         for year_link in year_links:
             get_stockprice(year_link, folder)
@@ -79,6 +81,7 @@ def get_stockprice(year_link, folder):
             df = pd.read_html(res.text)[0]
         except (ValueError,AttributeError) as e:
             logger.warning(year_link + str(e))
+            print('[WARNING] ' + year_link + str(e))
         else:
             df.rename(columns=Declaration.field_map, inplace=True)
             issue_attrs = res.html.find('meta[name="keywords"]')[0].attrs['content'].split(',')
@@ -108,6 +111,7 @@ def parse_url(url, folder):
             get_stock_links(url, folder)
     else:
         logger.warning(url+' invalid_url')
+        print('[WARNING] ' + url+' invalid_url')
 
 
 def main():
