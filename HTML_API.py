@@ -24,11 +24,7 @@ def waited_get(session: HTMLSession, url, min_wait=1, max_wait=1, *, logger):
         res = session.get(url)
         res.raise_for_status()
         logger.debug('get_processed ' + url)
-    except RemoteDisconnected as e:
-        logger.critical(url + " error " + str(e))
-        time.sleep(60*30)
-        pass
-    except RequestException as e:
+    except (RemoteDisconnected, RequestException,OSError) as e:
         logger.critical(url + " error " + str(e))
     finally:
         return res
@@ -43,7 +39,7 @@ def waited_post(session: HTMLSession, url, data, min_wait=1, max_wait=1, *, logg
         res = session.post(url, data)
         res.raise_for_status()
         logger.debug('post_processed ' + url)
-    except RequestException as e:
+    except (RemoteDisconnected, RequestException, OSError) as e:
         logger.critical(url + " error " + str(e))
     finally:
         return res
